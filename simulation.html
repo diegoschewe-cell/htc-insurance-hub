@@ -42,6 +42,29 @@
         }
     </style>
 </head>
+<script>
+    // Gửi tín hiệu khi người dùng cuộn kịch sàn hoặc vuốt mạnh trên mobile
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', function() {
+        let st = window.pageYOffset || document.documentElement.scrollTop;
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
+            // Đã chạm đáy - Chờ người dùng kéo thêm một chút để chuyển trang
+            console.log("Chạm đáy trang con");
+        }
+    });
+
+    // Hỗ trợ vuốt trực tiếp trong iframe để báo cho Index
+    let ts;
+    document.addEventListener('touchstart', function (e) { ts = e.touches[0].clientY; });
+    document.addEventListener('touchend', function (e) {
+        let te = e.changedTouches[0].clientY;
+        if (ts > te + 120 && (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2)) {
+            window.parent.postMessage('nextPage', '*');
+        } else if (ts < te - 120 && window.scrollY <= 0) {
+            window.parent.postMessage('prevPage', '*');
+        }
+    });
+</script>
 <body class="flex flex-col py-8 px-6 md:px-16 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-slate-950 to-slate-950">
 
     <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-10" data-aos="fade-down">
