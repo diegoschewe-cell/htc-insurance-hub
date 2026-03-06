@@ -8,26 +8,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Be+Vietnam+Pro:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --police-blue: #0a192f;
             --htc-blue: #3b82f6;
-            --gold-glow: #fbbf24;
         }
         body {
             background-color: #020617;
             font-family: 'Be Vietnam Pro', sans-serif;
             color: #f8fafc;
-            overflow: hidden;
+            /* SỬA LỖI 1: Cho phép cuộn trên mobile, chỉ ẩn ngang */
+            overflow-x: hidden;
+            overflow-y: auto;
             line-height: 1.6;
         }
-        h1, h2, h3 { 
-            font-family: 'Montserrat', sans-serif; 
-            letter-spacing: -0.02em;
-        }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; letter-spacing: -0.02em; }
         
         .glass-panel {
             background: rgba(15, 23, 42, 0.4);
@@ -43,14 +39,11 @@
         }
 
         #bg-canvas {
-            position: absolute;
+            position: fixed; /* SỬA LỖI 2: Đổi từ absolute sang fixed để nền đi theo khi cuộn */
             top: 0; left: 0;
             z-index: 0;
             opacity: 0.3;
-        }
-
-        .hero-title {
-            line-height: 1.2; /* Chỉnh khoảng cách dòng tiêu đề để không bị đè */
+            pointer-events: none;
         }
 
         .glow-orb {
@@ -63,15 +56,15 @@
             50% { transform: scale(1.15); opacity: 0.6; }
         }
 
+        @keyframes pan {
+            from { transform: translateY(0); }
+            to { transform: translateY(320px); }
+        }
+
         .btn-primary {
             background: linear-gradient(to right, #1d4ed8, #2563eb);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 30px -10px rgba(37, 99, 235, 0.6);
         }
     </style>
 </head>
@@ -79,28 +72,28 @@
 
     <canvas id="bg-canvas"></canvas>
 
-    <nav class="fixed top-0 w-full z-50 py-8 px-10 md:px-20 flex justify-between items-center" data-aos="fade-down">
-        <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-900/40">
-                <span class="font-bold text-2xl text-white">H</span>
+    <nav class="relative md:fixed top-0 w-full z-50 py-6 md:py-8 px-6 md:px-20 flex justify-between items-center" data-aos="fade-down">
+        <div class="flex items-center gap-3 md:gap-4">
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                <span class="font-bold text-xl md:text-2xl text-white">H</span>
             </div>
             <div>
-                <div class="font-bold text-xl tracking-tight">HTC <span class="text-blue-500 text-sm">GROUP</span></div>
-                <div class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.3em]">National Data Sovereignty</div>
+                <div class="font-bold text-lg md:text-xl tracking-tight leading-none">HTC <span class="text-blue-500 text-xs">GROUP</span></div>
+                <div class="text-[8px] md:text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em]">National Data Sovereignty</div>
             </div>
         </div>
-        <div class="hidden md:flex gap-6">
-            <div class="glass-panel px-5 py-2 rounded-full flex items-center gap-3 text-[10px] font-bold text-yellow-500 uppercase tracking-widest border-yellow-500/20">
-                <i data-lucide="shield-check" class="w-4 h-4"></i> Đề án 06 / BCA
+        <div class="hidden md:flex">
+            <div class="glass-panel px-5 py-2 rounded-full text-[10px] font-bold text-yellow-500 uppercase tracking-widest border-yellow-500/20">
+                Đề án 06 / BCA
             </div>
         </div>
     </nav>
 
-    <main class="relative z-10 h-screen flex items-center justify-center px-10 md:px-20">
-        <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+    <main class="relative z-10 min-h-screen flex items-center py-20 md:py-0 px-6 md:px-20">
+        <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20 items-center">
             
-            <div data-aos="fade-right" data-aos-delay="200" class="space-y-8">
-                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-widest">
+            <div data-aos="fade-right" data-aos-delay="200" class="space-y-6 md:space-y-8 text-center lg:text-left">
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-widest mx-auto lg:mx-0">
                     <span class="flex h-2 w-2 relative">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
@@ -108,63 +101,50 @@
                     Hệ sinh thái định danh số quốc gia
                 </div>
                 
-                <h1 class="hero-title text-5xl md:text-7xl font-extrabold">
+                <h1 class="text-4xl md:text-7xl font-extrabold leading-[1.1]">
                     KIẾN TẠO TRỤC <br>
                     <span class="text-gold-gradient py-2">LIÊN THÔNG</span> <br>
                     BẢO HIỂM SỐ
                 </h1>
                 
-                <p class="text-slate-400 text-lg md:text-xl leading-relaxed max-w-xl font-light">
-                    Phá bỏ rào cản dữ liệu chuyên ngành. Ứng dụng sức mạnh từ <strong class="text-white font-semibold">CSDL Quốc gia về dân cư</strong> để minh bạch hóa toàn bộ thị trường bảo hiểm Việt Nam.
+                <p class="text-slate-400 text-base md:text-xl leading-relaxed max-w-xl font-light mx-auto lg:mx-0">
+                    Phá bỏ rào cản dữ liệu chuyên ngành. Ứng dụng sức mạnh từ <strong class="text-white font-semibold">CSDL Quốc gia về dân cư</strong> để minh bạch hóa thị trường.
                 </p>
 
-                <div class="flex flex-wrap gap-6 pt-4">
-                    <button class="btn-primary px-10 py-5 rounded-2xl font-bold text-sm tracking-widest uppercase flex items-center gap-4 text-white">
-                        Khám phá giải pháp <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 md:gap-6 pt-4">
+                    <button class="btn-primary px-8 py-4 md:px-10 md:py-5 rounded-2xl font-bold text-xs md:text-sm tracking-widest uppercase flex items-center justify-center gap-4 text-white">
+                        Giải pháp <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
                     </button>
-                    <button class="glass-panel px-10 py-5 rounded-2xl font-bold text-sm tracking-widest uppercase flex items-center gap-4 hover:bg-white/5 transition-all text-slate-300">
-                        Hành lang pháp lý <i data-lucide="file-text" class="w-5 h-5"></i>
+                    <button class="glass-panel px-8 py-4 md:px-10 md:py-5 rounded-2xl font-bold text-xs md:text-sm tracking-widest uppercase flex items-center justify-center gap-4 text-slate-300">
+                        Pháp lý <i data-lucide="file-text" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
 
-            <div class="hidden lg:flex justify-center items-center relative" data-aos="fade-left" data-aos-delay="400">
-                <div class="relative w-[450px] h-[450px] flex items-center justify-center">
+            <div class="hidden sm:flex justify-center items-center relative" data-aos="fade-left" data-aos-delay="400">
+                <div class="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] flex items-center justify-center">
                     <div class="absolute inset-0 bg-blue-600/10 rounded-full glow-orb"></div>
-                    
                     <div class="absolute inset-0 border border-blue-500/20 rounded-full animate-[spin_20s_linear_infinite]"></div>
-                    <div class="absolute inset-10 border border-dashed border-white/10 rounded-full animate-[spin_30s_linear_infinite_reverse]"></div>
                     
-                    <div class="glass-panel w-64 h-80 rounded-[2.5rem] p-8 flex flex-col items-center justify-center transform hover:scale-105 transition-transform duration-500 shadow-2xl">
-                        <div class="mb-8 p-6 bg-blue-500/10 rounded-full">
-                            <i data-lucide="fingerprint" class="w-16 h-16 text-blue-400"></i>
+                    <div class="glass-panel w-48 h-64 md:w-64 md:h-80 rounded-[2.5rem] p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
+                        <i data-lucide="fingerprint" class="w-12 h-12 md:w-16 md:h-16 text-blue-400 mb-6"></i>
+                        <div class="text-center">
+                            <div class="text-[8px] md:text-[10px] font-bold text-blue-500 tracking-[0.3em] uppercase">Identity Check</div>
+                            <div class="text-lg md:text-xl font-bold text-white tracking-tight">VNeID Level 2</div>
                         </div>
-                        <div class="text-center space-y-2">
-                            <div class="text-[10px] font-bold text-blue-500 tracking-[0.3em] uppercase">Identity Check</div>
-                            <div class="text-xl font-bold text-white tracking-tight">VNeID Level 2</div>
-                        </div>
-                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-[pan_3s_infinite] opacity-50"></div>
-                    </div>
-
-                    <div class="absolute top-10 right-10 glass-panel p-4 rounded-2xl animate-bounce shadow-xl">
-                        <i data-lucide="database" class="w-6 h-6 text-blue-400"></i>
-                    </div>
-                    <div class="absolute bottom-10 left-10 glass-panel p-4 rounded-2xl animate-pulse shadow-xl">
-                        <i data-lucide="shield" class="w-6 h-6 text-yellow-500"></i>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <div class="fixed bottom-0 w-full z-50 py-10 px-10 md:px-20 border-t border-white/5 glass-panel" data-aos="fade-up" data-aos-delay="600">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-            <div class="flex items-center gap-10">
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Căn cứ thực thi:</div>
-                <div class="flex gap-6">
-                    <span class="text-[10px] text-slate-300 font-semibold border-b border-blue-500/50 pb-1">Nghị quyết 57-NQ/TW</span>
-                    <span class="text-[10px] text-slate-300 font-semibold border-b border-blue-500/50 pb-1">Nghị định 59/2022/NĐ-CP</span>
-                    <span class="text-[10px] text-slate-300 font-semibold border-b border-blue-500/50 pb-1">Đề án 06 Chính phủ</span>
+    <div class="relative md:fixed bottom-0 w-full z-50 py-8 md:py-10 px-6 md:px-20 border-t border-white/5 glass-panel" data-aos="fade-up">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex flex-col md:flex-row items-center gap-4 md:gap-10">
+                <div class="text-[10px] text-slate-500 uppercase tracking-widest font-bold text-center md:text-left">Căn cứ thực thi:</div>
+                <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+                    <span class="text-[9px] md:text-[10px] text-slate-300 font-semibold border-b border-blue-500/30 pb-1">Nghị quyết 57-NQ/TW</span>
+                    <span class="text-[9px] md:text-[10px] text-slate-300 font-semibold border-b border-blue-500/30 pb-1">Đề án 06</span>
                 </div>
             </div>
             <div class="flex items-center gap-3 text-blue-400 text-[10px] font-bold uppercase tracking-widest">
@@ -182,7 +162,6 @@
         lucide.createIcons();
         AOS.init({ duration: 1200, once: true });
 
-        // Background Animation Logic
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -193,9 +172,7 @@
         }
 
         class Particle {
-            constructor() {
-                this.init();
-            }
+            constructor() { this.init(); }
             init() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
@@ -219,7 +196,8 @@
         function setup() {
             resize();
             particles = [];
-            for (let i = 0; i < 100; i++) particles.push(new Particle());
+            let count = window.innerWidth < 768 ? 40 : 100; // Giảm số hạt trên mobile để mượt hơn
+            for (let i = 0; i < count; i++) particles.push(new Particle());
         }
 
         function loop() {
@@ -232,12 +210,5 @@
         setup();
         loop();
     </script>
-    
-    <style>
-        @keyframes pan {
-            from { transform: translateY(0); }
-            to { transform: translateY(320px); }
-        }
-    </style>
 </body>
 </html>
