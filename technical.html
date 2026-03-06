@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTC - Technical Core | Hệ Thần Kinh Số</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Be+Vietnam+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #020617;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            color: #f8fafc;
+            line-height: 1.6;
+        }
+        h1, h2, h3, .font-heading { 
+            font-family: 'Montserrat', sans-serif; 
+            letter-spacing: -0.02em;
+        }
+
+        /* Isometric Card Effect */
+        .iso-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: perspective(1000px) rotateX(10deg) rotateY(-10deg);
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .iso-card:hover {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(-10px);
+            background: rgba(30, 41, 59, 0.7);
+            border-color: #3b82f6;
+            box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.3);
+        }
+
+        .tech-label {
+            background: linear-gradient(90deg, #1e3a8a, transparent);
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* Animated Data Path */
+        .data-path {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            background-size: 200% 100%;
+            animation: flow 3s infinite linear;
+        }
+        @keyframes flow {
+            from { background-position: 200% 0; }
+            to { background-position: -200% 0; }
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+    </style>
+</head>
+<body class="py-24 px-10 md:px-20">
+
+    <header class="max-w-7xl mx-auto text-center mb-32" data-aos="fade-down">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-[0.4em] mb-8">
+            Core Architecture Stack
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-8 leading-tight uppercase">
+            "HỆ THẦN KINH" <span class="text-blue-500 underline decoration-blue-900">SỐ HTC</span>
+        </h1>
+        <p class="text-slate-400 max-w-3xl mx-auto text-lg md:text-xl font-light">
+            Sử dụng các công nghệ mũi nhọn khắc phục triệt để các rào cản về độ trễ, bảo mật và khả năng mở rộng của mô hình cũ.
+        </p>
+    </header>
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
+        
+        <div class="iso-card p-10 rounded-[2.5rem] relative group" data-aos="fade-up">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="p-4 bg-blue-600/20 rounded-2xl">
+                    <i data-lucide="share-2" class="text-blue-400 w-8 h-8"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Kiến trúc (Architecture)</span>
+                    <h3 class="text-2xl font-bold glow-text uppercase">Kafka & gRPC</h3>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <div class="tech-label p-4 rounded-r-xl bg-blue-900/10">
+                    <p class="text-sm font-semibold text-white uppercase italic">Khắc phục: Độ trễ API & Nghẽn cổ chai Gtel</p>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed font-light">
+                    HTC chọn **EDA kết hợp gRPC** để truyền dữ liệu nhị phân tốc độ cao. Hệ thống phản hồi hàng triệu yêu cầu/giây gần như tức thì, thay thế mô hình xử lý đồng bộ API Gateway (Kong) chậm chạp của đối thủ.
+                </p>
+            </div>
+            <div class="data-path mt-8 opacity-30"></div>
+        </div>
+
+        <div class="iso-card p-10 rounded-[2.5rem] relative group" data-aos="fade-up" data-aos-delay="200">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="p-4 bg-purple-600/20 rounded-2xl">
+                    <i data-lucide="shield-check" class="text-purple-400 w-8 h-8"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold text-purple-500 uppercase tracking-widest">Bảo mật (Security)</span>
+                    <h3 class="text-2xl font-bold glow-text uppercase">TEE & VGCA Digital Sign</h3>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <div class="tech-label p-4 rounded-r-xl border-purple-500 bg-purple-900/10">
+                    <p class="text-sm font-semibold text-white uppercase italic">Khắc phục: Nguy cơ lộ PII từ Admin hệ thống</p>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed font-light">
+                    HTC sử dụng **Confidential Computing (TEE)**. Dữ liệu PII của công dân được xử lý trong "vùng thực thi tin cậy", đảm bảo tính riêng tư tuyệt đối ngay cả khi quản trị viên hệ thống có ý đồ xâm nhập dữ liệu thô.
+                </p>
+            </div>
+            <div class="data-path mt-8 opacity-30 !bg-purple-500"></div>
+        </div>
+
+        <div class="iso-card p-10 rounded-[2.5rem] relative group" data-aos="fade-up">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="p-4 bg-green-600/20 rounded-2xl">
+                    <i data-lucide="database" class="text-green-400 w-8 h-8"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold text-green-500 uppercase tracking-widest">Lưu trữ & Caching</span>
+                    <h3 class="text-2xl font-bold glow-text uppercase">TiDB & Redis Cluster</h3>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <div class="tech-label p-4 rounded-r-xl border-green-500 bg-green-900/10">
+                    <p class="text-sm font-semibold text-white uppercase italic">Khắc phục: Giới hạn mở rộng SQL Server Gtel</p>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed font-light">
+                    **Distributed NewSQL (TiDB)** cho phép mở rộng chiều ngang vô hạn. Kết hợp Redis Cluster, HTC đảm bảo dữ liệu của 100 triệu dân được truy xuất trong vòng 1-5 mili giây, không bao giờ gặp tình trạng "treo" hệ thống.
+                </p>
+            </div>
+            <div class="data-path mt-8 opacity-30 !bg-green-500"></div>
+        </div>
+
+        <div class="iso-card p-10 rounded-[2.5rem] relative group" data-aos="fade-up" data-aos-delay="200">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="p-4 bg-yellow-600/20 rounded-2xl">
+                    <i data-lucide="key" class="text-yellow-400 w-8 h-8"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold text-yellow-500 uppercase tracking-widest">Định danh (Identity)</span>
+                    <h3 class="text-2xl font-bold glow-text uppercase">FIDO2 & mTLS</h3>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <div class="tech-label p-4 rounded-r-xl border-yellow-500 bg-yellow-900/10">
+                    <p class="text-sm font-semibold text-white uppercase italic">Khắc phục: Lừa đảo (Phishing) OTP/Password</p>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed font-light">
+                    Loại bỏ OTP truyền thống. Sử dụng **FIDO2** (xác thực sinh trắc học phần cứng) và **mTLS** giữa các dịch vụ nội bộ, đảm bảo không một kết nối lạ nào có thể xâm nhập trái phép vào trục liên thông.
+                </p>
+            </div>
+            <div class="data-path mt-8 opacity-30 !bg-yellow-500"></div>
+        </div>
+
+    </div>
+
+    <div class="mt-32 max-w-4xl mx-auto" data-aos="zoom-in">
+        <div class="glass-panel p-8 rounded-3xl border border-blue-500/30 flex items-center gap-8 bg-blue-900/10">
+            <div class="hidden md:block">
+                <i data-lucide="cpu" class="w-16 h-16 text-blue-400 opacity-50"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-xl mb-2 italic">HTC chọn công nghệ để làm gì?</h4>
+                <p class="text-slate-400 text-sm">Chúng ta không chạy theo xu hướng, chúng ta chọn Stack công nghệ này để đảm bảo hệ thống **"Sống, Sạch, Đủ, Đúng"** và tuyệt đối an toàn dưới quyền quản lý của Bộ Công an.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-20 text-center">
+        <button class="bg-blue-600 hover:bg-blue-500 px-12 py-5 rounded-2xl font-bold uppercase tracking-widest text-xs transition-all shadow-2xl">
+            Tiếp tục: Cách mạng "1 Chạm" <i data-lucide="chevron-right" class="inline ml-2 w-4 h-4"></i>
+        </button>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 1000, once: true });
+    </script>
+</body>
+</html>

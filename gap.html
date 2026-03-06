@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTC - Gap Analysis | Đối Soát Chiến Lược</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Be+Vietnam+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #020617;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            color: #f8fafc;
+            line-height: 1.6;
+        }
+        h1, h2, h3, .font-heading { 
+            font-family: 'Montserrat', sans-serif; 
+            letter-spacing: -0.02em;
+        }
+        
+        .glass-red {
+            background: rgba(220, 38, 38, 0.03);
+            border: 1px solid rgba(220, 38, 38, 0.15);
+            backdrop-filter: blur(10px);
+        }
+        
+        .glass-blue {
+            background: rgba(30, 64, 175, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #fbbf24 0%, #d4af37 50%, #fcd34d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .vs-badge {
+            background: linear-gradient(135deg, #ef4444 0%, #3b82f6 100%);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+        }
+
+        .legal-card {
+            background: linear-gradient(90deg, rgba(30, 58, 138, 0.2) 0%, rgba(15, 23, 42, 0.05) 100%);
+            border-left: 3px solid #3b82f6;
+            transition: all 0.3s ease;
+        }
+        .legal-card:hover {
+            background: rgba(30, 58, 138, 0.3);
+            transform: translateX(5px);
+        }
+
+        /* Hiệu ứng mờ cho bên cũ */
+        .legacy-dim { opacity: 0.5; filter: grayscale(0.4); transition: all 0.5s ease; }
+        .legacy-dim:hover { opacity: 0.8; filter: grayscale(0); }
+    </style>
+</head>
+<body class="py-24 px-10 md:px-20">
+
+    <header class="max-w-7xl mx-auto text-center mb-32" data-aos="fade-down">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-red-500/20 text-red-400 text-[10px] font-bold uppercase tracking-[0.4em] mb-8">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+            Critical Comparison Analysis
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-8 leading-tight uppercase">
+            Đối soát <span class="text-blue-500">chiến lược</span>
+        </h1>
+        <p class="text-slate-400 max-w-3xl mx-auto text-lg md:text-xl font-light">
+            Phân tích sự dịch chuyển từ tư duy hiện có sang <strong class="text-white">Kiến trúc Chủ quyền số (HTC)</strong> dựa trên thực tiễn Đề án 06.
+        </p>
+    </header>
+
+    <div class="max-w-7xl mx-auto">
+        <div class="space-y-24">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch" data-aos="fade-up">
+                <div class="glass-red p-10 rounded-[2rem] legacy-dim flex flex-col justify-center">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="layers" class="text-red-500 w-6 h-6"></i>
+                        <span class="text-red-500 font-bold text-xs uppercase tracking-widest">Mô hình GTEL (Cũ)</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6">Kiến trúc Hub & Spoke</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Hệ thống cồng kềnh, nhật ký giao dịch dễ bị sửa xóa. Tư duy "đợi dân vào mới làm" dẫn đến sự thụ động hoàn toàn trong quản trị dữ liệu chuyên ngành.
+                    </p>
+                </div>
+
+                <div class="glass-blue p-10 rounded-[2rem] border-t border-blue-500/30 relative flex flex-col justify-center shadow-2xl">
+                    <div class="absolute -left-12 top-1/2 -translate-y-1/2 hidden lg:flex">
+                        <div class="vs-badge w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-black italic">VS</div>
+                    </div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="zap" class="text-blue-400 w-6 h-6"></i>
+                        <span class="text-blue-400 font-bold text-xs uppercase tracking-widest">Đề xuất HTC (Đột phá)</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6 text-white">Event-Driven Mesh & Active Cleansing</h3>
+                    <p class="text-slate-200 text-sm leading-relaxed">
+                        Sử dụng NATS JetStream & Blockchain chống chối bỏ. Thực hiện <span class="text-blue-400 font-bold underline decoration-blue-800">Làm sạch dữ liệu chủ động</span> dựa trên CSDL Dân cư, giúp Bộ làm chủ dữ liệu toàn ngành ngay lập tức.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch" data-aos="fade-up">
+                <div class="glass-red p-10 rounded-[2rem] legacy-dim flex flex-col justify-center">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="shield-off" class="text-red-500 w-6 h-6"></i>
+                        <span class="text-red-500 font-bold text-xs uppercase tracking-widest">Hạn chế GTEL</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6">Quy trình 14 bước & Rủi ro PII</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Quy trình rườm rà gây ma sát trải nghiệm. Tồn tại rủi ro lộ lọt thông tin cá nhân (PII) tại các Gateway trung gian của đối tác tư nhân trong luồng dữ liệu.
+                    </p>
+                </div>
+
+                <div class="glass-blue p-10 rounded-[2rem] border-t border-green-500/30 relative flex flex-col justify-center shadow-2xl">
+                    <div class="absolute -left-12 top-1/2 -translate-y-1/2 hidden lg:flex">
+                        <div class="vs-badge w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-black italic">VS</div>
+                    </div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="fingerprint" class="text-green-400 w-6 h-6"></i>
+                        <span class="text-green-400 font-bold text-xs uppercase tracking-widest">Đột phá HTC</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6 text-white">ZKP & One-touch Authentication</h3>
+                    <p class="text-slate-200 text-sm leading-relaxed">
+                        Mã hóa từng trường (FLE) và Bằng chứng không tiết lộ tri thức (ZKP). Cắt giảm quy trình xuống còn 3 bước nhờ xác thực sinh trắc học VNeID trực tiếp.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch" data-aos="fade-up">
+                <div class="glass-red p-10 rounded-[2rem] legacy-dim flex flex-col justify-center">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="database" class="text-red-500 w-6 h-6"></i>
+                        <span class="text-red-500 font-bold text-xs uppercase tracking-widest">Rủi ro GTEL</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6">SQL Server & DC-DR Riêng</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Xây mới hạ tầng gây lãng phí hàng nghìn tỷ đồng. Nguy cơ nghẽn hệ thống cực cao khi chạm ngưỡng 100 triệu dân do giới hạn của kiến trúc SQL truyền thống.
+                    </p>
+                </div>
+
+                <div class="glass-blue p-10 rounded-[2rem] border-t border-yellow-500/30 relative flex flex-col justify-center shadow-2xl">
+                    <div class="absolute -left-12 top-1/2 -translate-y-1/2 hidden lg:flex">
+                        <div class="vs-badge w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-black italic">VS</div>
+                    </div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="cloud-lightning" class="text-yellow-500 w-6 h-6"></i>
+                        <span class="text-yellow-500 font-bold text-xs uppercase tracking-widest">Tối ưu HTC</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6 text-white">NewSQL & Cloud-native Infra</h3>
+                    <p class="text-slate-200 text-sm leading-relaxed">
+                        Tận dụng hạ tầng dùng chung của Đề án 06. Tiết kiệm tối đa đầu tư công, rút ngắn 50% thời gian triển khai, sẵn sàng cho quy mô dữ liệu khổng lồ.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-40 border-t border-white/5 pt-20" data-aos="fade-up">
+            <h2 class="text-center text-3xl font-bold mb-16 uppercase tracking-widest">Hành lang pháp lý <span class="text-blue-500">thực thi</span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="legal-card p-8">
+                    <h4 class="font-bold text-blue-400 mb-3">Luật Giao dịch điện tử 2023</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed uppercase tracking-wider">Cơ sở pháp lý cho hợp đồng và GCN bảo hiểm điện tử có giá trị như bản giấy.</p>
+                </div>
+                <div class="legal-card p-8 shadow-inner">
+                    <h4 class="font-bold text-blue-400 mb-3">Nghị định 13/2023/NĐ-CP</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed uppercase tracking-wider">Tiêu chuẩn vàng bảo vệ dữ liệu cá nhân qua công nghệ mã hóa FLE/ZKP.</p>
+                </div>
+                <div class="legal-card p-8">
+                    <h4 class="font-bold text-blue-400 mb-3">Nghị định 85/2016/NĐ-CP</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed uppercase tracking-wider">Thiết kế hệ thống thông tin quan trọng quốc gia đạt tiêu chuẩn Cấp độ 4/5.</p>
+                </div>
+                <div class="legal-card p-8">
+                    <h4 class="font-bold text-blue-400 mb-3">Quyết định số 06/QĐ-TTg</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed uppercase tracking-wider">Trục lõi tận dụng thẻ CCCD gắn chip và VNeID làm nền tảng xác thực duy nhất.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-40 text-center" data-aos="zoom-in">
+        <button class="bg-blue-600 hover:bg-blue-500 text-white px-12 py-5 rounded-2xl font-bold uppercase tracking-widest text-xs transition-all shadow-2xl shadow-blue-900/40">
+            Tiếp tục: Kiến trúc "Trục Bảo Hiểm Liên Thông " số <i data-lucide="chevron-right" class="inline ml-2 w-4 h-4"></i>
+        </button>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 1000, once: true });
+    </script>
+</body>
+</html>

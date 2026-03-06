@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTC Group - Trục Bảo Hiểm Quốc Gia Hợp Nhất</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Be+Vietnam+Pro:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --primary: #3b82f6; }
+        body { background: #020617; overflow: hidden; font-family: 'Be Vietnam Pro', sans-serif; }
+        
+        /* Glassmorphism cho Login */
+        .glass-login {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Input Styling */
+        .pass-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: white;
+            letter-spacing: 0.5em;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .pass-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            outline: none;
+        }
+
+        /* Nav & Frame Styles (Giữ nguyên từ code cũ) */
+        .nav-item { transition: all 0.3s ease; position: relative; cursor: pointer; }
+        .nav-item.active { color: white; font-weight: 800; }
+        .nav-item.active::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 100%; height: 2px; background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .page-container { height: calc(100vh - 70px); width: 100%; border: none; }
+        
+        #mobile-menu { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+        #mobile-menu.open { transform: translateX(0); }
+
+        /* Màn hình khóa */
+        #lock-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #020617;
+            display: flex; align-items: center; justify-center;
+        }
+    </style>
+</head>
+<body class="text-slate-300">
+
+    <div id="lock-screen">
+        <div class="glass-login p-10 md:p-16 rounded-[2.5rem] w-full max-w-md mx-4 text-center" data-aos="zoom-in">
+            <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-500/20">
+                <i data-lucide="lock" class="text-white w-10 h-10"></i>
+            </div>
+            <h2 class="font-['Montserrat'] text-2xl font-bold text-white mb-2 uppercase">Truy cập giới hạn</h2>
+            <p class="text-slate-500 text-xs mb-8 tracking-widest uppercase">Vui lòng nhập Passcode để tiếp tục</p>
+            
+            <div class="space-y-4">
+                <input type="password" id="passcode" class="pass-input w-full py-4 rounded-xl text-lg" placeholder="••••••">
+                <p id="error-msg" class="text-red-500 text-[10px] font-bold uppercase hidden">Mật mã không chính xác</p>
+                <button onclick="checkPass()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-900/40 uppercase text-xs tracking-[0.2em]">
+                    Xác thực truy cập
+                </button>
+            </div>
+            <p class="mt-8 text-[9px] text-slate-600 uppercase tracking-widest italic">HTC Group Internal Strategy Portall</p>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <nav class="h-[70px] border-b border-white/10 px-6 md:px-12 flex items-center justify-between bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-white">H</div>
+                <span class="font-['Montserrat'] font-extrabold text-xl tracking-tighter text-white hidden sm:block">HTC <span class="text-blue-500">GROUP</span></span>
+            </div>
+
+            <ul class="hidden lg:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest">
+                <li><a onclick="loadPage('hero.html', this)" class="nav-item active">01. Tầm nhìn</a></li>
+                <li><a onclick="loadPage('gap.html', this)" class="nav-item">02. Đối soát</a></li>
+                <li><a onclick="loadPage('technical.html', this)" class="nav-item">03. Công nghệ</a></li>
+                <li><a onclick="loadPage('security.html', this)" class="nav-item">04. Bảo mật</a></li>
+                <li><a onclick="loadPage('experience.html', this)" class="nav-item">05. Trải nghiệm</a></li>
+                <li><a onclick="loadPage('simulation.html', this)" class="nav-item">06. Mô phỏng</a></li>
+            </ul>
+
+            <button class="lg:hidden p-2" onclick="toggleMenu()"><i data-lucide="menu"></i></button>
+        </nav>
+
+        <div id="mobile-menu" class="fixed inset-0 bg-slate-950 z-[60] flex flex-col p-10 gap-8 lg:hidden">
+            <button class="self-end" onclick="toggleMenu()"><i data-lucide="x"></i></button>
+            <div class="flex flex-col gap-6 mt-10">
+                <a onclick="loadPage('hero.html', null); toggleMenu()" class="text-2xl font-bold uppercase">01. Tầm nhìn</a>
+                <a onclick="loadPage('gap.html', null); toggleMenu()" class="text-2xl font-bold uppercase">02. Đối soát</a>
+                <a onclick="loadPage('technical.html', null); toggleMenu()" class="text-2xl font-bold uppercase">03. Công nghệ</a>
+                <a onclick="loadPage('security.html', null); toggleMenu()" class="text-2xl font-bold uppercase">04. Bảo mật</a>
+                <a onclick="loadPage('experience.html', null); toggleMenu()" class="text-2xl font-bold uppercase">05. Trải nghiệm</a>
+                <a onclick="loadPage('simulation.html', null); toggleMenu()" class="text-2xl font-bold uppercase">06. Mô phỏng</a>
+            </div>
+        </div>
+
+        <iframe src="hero.html" id="content-frame" class="page-container"></iframe>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Kiểm tra Passcode
+        function checkPass() {
+            const pass = document.getElementById('passcode').value;
+            const errorMsg = document.getElementById('error-msg');
+            
+            if (pass === 'htc@06') {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden');
+                document.body.style.overflow = 'auto';
+            } else {
+                errorMsg.classList.remove('hidden');
+                document.getElementById('passcode').classList.add('border-red-500');
+                setTimeout(() => {
+                    errorMsg.classList.add('hidden');
+                    document.getElementById('passcode').classList.remove('border-red-500');
+                }, 2000);
+            }
+        }
+
+        // Lắng nghe phím Enter
+        document.getElementById('passcode').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkPass();
+        });
+
+        // Điều hướng Page (Code cũ)
+        function loadPage(pageName, element) {
+            document.getElementById('content-frame').src = pageName;
+            if(element) {
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+            }
+        }
+
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
