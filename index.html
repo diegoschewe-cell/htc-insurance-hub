@@ -111,45 +111,86 @@
         <iframe src="hero.html" id="content-frame" class="page-container"></iframe>
     </div>
 
-    <script>
-        lucide.createIcons();
+<script>
+    lucide.createIcons();
 
-        // Kiểm tra Passcode
-        function checkPass() {
-            const pass = document.getElementById('passcode').value;
-            const errorMsg = document.getElementById('error-msg');
+    // Danh sách các trang theo thứ tự trình diễn
+    const pages = [
+        'hero.html', 
+        'gap.html', 
+        'technical.html', 
+        'security.html', 
+        'experience.html', 
+        'simulation.html'
+    ];
+    let currentPageIndex = 0;
+
+    // Kiểm tra Passcode
+    function checkPass() {
+        const pass = document.getElementById('passcode').value;
+        if (pass === 'htc@06') {
+            document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('main-content').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Khóa scroll body chính để dùng iframe
+        } else {
+            alert("Sai mật mã!");
+        }
+    }
+
+    // Hàm chuyển trang chuyên nghiệp
+    function loadPage(pageName, element) {
+        const frame = document.getElementById('content-frame');
+        
+        // Hiệu ứng Fade out đơn giản
+        frame.style.opacity = '0';
+        
+        setTimeout(() => {
+            frame.src = pageName;
+            currentPageIndex = pages.indexOf(pageName);
             
-            if (pass === 'htc@06') {
-                document.getElementById('lock-screen').style.display = 'none';
-                document.getElementById('main-content').classList.remove('hidden');
-                document.body.style.overflow = 'auto';
-            } else {
-                errorMsg.classList.remove('hidden');
-                document.getElementById('passcode').classList.add('border-red-500');
-                setTimeout(() => {
-                    errorMsg.classList.add('hidden');
-                    document.getElementById('passcode').classList.remove('border-red-500');
-                }, 2000);
+            // Cập nhật Menu UI
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            // Tìm và active đúng nút (nếu nhấn từ menu)
+            if(element) element.classList.add('active');
+            else {
+                const navItems = document.querySelectorAll('.nav-item');
+                if(navItems[currentPageIndex]) navItems[currentPageIndex].classList.add('active');
             }
-        }
+            
+            frame.onload = () => { frame.style.opacity = '1'; };
+        }, 300);
+    }
 
-        // Lắng nghe phím Enter
-        document.getElementById('passcode').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') checkPass();
-        });
+    // LOGIC VUỐT MÀN HÌNH (MOBILE) & CUỘN CHUỘT
+    let touchStartY = 0;
+    let touchEndY = 0;
 
-        // Điều hướng Page (Code cũ)
-        function loadPage(pageName, element) {
-            document.getElementById('content-frame').src = pageName;
-            if(element) {
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                element.classList.add('active');
-            }
-        }
+    // Lắng nghe tin nhắn từ Iframe gửi ra ngoài
+    window.addEventListener('message', function(e) {
+        if (e.data === 'nextPage') navigate('next');
+        if (e.data === 'prevPage') navigate('prev');
+    });
 
-        function toggleMenu() {
-            document.getElementById('mobile-menu').classList.toggle('open');
+    function navigate(direction) {
+        if (direction === 'next' && currentPageIndex < pages.length - 1) {
+            loadPage(pages[currentPageIndex + 1]);
+        } else if (direction === 'prev' && currentPageIndex > 0) {
+            loadPage(pages[currentPageIndex - 1]);
         }
-    </script>
+    }
+
+    // Bắt sự kiện vuốt trên toàn màn hình index
+    document.addEventListener('touchstart', e => touchStartY = e.changedTouches[0].screenY);
+    document.addEventListener('touchend', e => {
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        const threshold = 100; // Độ dài vuốt tối thiểu
+        if (touchStartY - touchEndY > threshold) navigate('next'); // Vuốt lên -> Trang sau
+        if (touchEndY - touchStartY > threshold) navigate('prev'); // Vuốt xuống -> Trang trước
+    }
+</script>
 </body>
 </html>
