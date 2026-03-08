@@ -3,162 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTC Security - Zero Knowledge Proof</title>
+    <title>HTC Group - Trục Bảo Hiểm Quốc Gia Hợp Nhất</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Be+Vietnam+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Be+Vietnam+Pro:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            background-color: #020617;
-            font-family: 'Be Vietnam Pro', sans-serif;
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
-        h1, h2, h3 { font-family: 'Montserrat', sans-serif; }
-
-        /* Hiệu ứng tia quét Laser */
-        .scanner-line {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-            position: absolute;
-            width: 100%;
-            top: 50%;
-            animation: scan 3s ease-in-out infinite;
-            z-index: 10;
-        }
-        @keyframes scan {
-            0%, 100% { top: 0%; opacity: 0; }
-            50% { top: 100%; opacity: 1; }
+        :root { --primary: #3b82f6; }
+        body { background: #020617; overflow: hidden; font-family: 'Be Vietnam Pro', sans-serif; }
+        
+        .glass-login {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        /* Hộp đen ZKP */
-        .zkp-box {
-            background: radial-gradient(circle, #1e3a8a 0%, #020617 100%);
-            border: 2px solid #3b82f6;
-            box-shadow: 0 0 50px rgba(59, 130, 246, 0.3);
+        .pass-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: white;
+            letter-spacing: 0.5em;
+            text-align: center;
+            transition: all 0.3s;
         }
 
-        /* Dữ liệu bay ra (Proof tokens) */
-        .proof-token {
-            animation: fly-out 2s linear infinite;
-            opacity: 0;
+        .nav-item { transition: all 0.3s ease; position: relative; cursor: pointer; }
+        .nav-item.active { color: white; font-weight: 800; }
+        .nav-item.active::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 100%; height: 2px; background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
         }
-        @keyframes fly-out {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
+
+        /* FIX: Thêm transition để mượt hơn khi chuyển trang */
+        .page-container { 
+            height: calc(100vh - 70px); 
+            width: 100%; 
+            border: none; 
+            transition: opacity 0.4s ease-in-out; 
+        }
+        
+        #mobile-menu { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+        #mobile-menu.open { transform: translateX(0); }
+
+        /* FIX: Sửa lại CSS Lock Screen cho chuẩn */
+        #lock-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #020617;
+            display: flex; align-items: center; justify-content: center;
         }
     </style>
 </head>
-<script>
-    // Gửi tín hiệu khi người dùng cuộn kịch sàn hoặc vuốt mạnh trên mobile
-    let lastScrollTop = 0;
-    window.addEventListener('scroll', function() {
-        let st = window.pageYOffset || document.documentElement.scrollTop;
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
-            // Đã chạm đáy - Chờ người dùng kéo thêm một chút để chuyển trang
-            console.log("Chạm đáy trang con");
-        }
-    });
+<body class="text-slate-300">
 
-    // Hỗ trợ vuốt trực tiếp trong iframe để báo cho Index
-    let ts;
-    document.addEventListener('touchstart', function (e) { ts = e.touches[0].clientY; });
-    document.addEventListener('touchend', function (e) {
-        let te = e.changedTouches[0].clientY;
-        if (ts > te + 120 && (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2)) {
-            window.parent.postMessage('nextPage', '*');
-        } else if (ts < te - 120 && window.scrollY <= 0) {
-            window.parent.postMessage('prevPage', '*');
-        }
-    });
-</script>
-<body class="py-16 px-6 md:px-20">
-
-    <header class="max-w-7xl mx-auto text-center mb-20" data-aos="fade-down">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-[0.4em] mb-6">
-            Privacy-Preserving Technology
-        </div>
-        <h1 class="text-3xl md:text-5xl font-extrabold uppercase mb-4">
-            GIẢI PHÁP BẢO MẬT <span class="text-blue-500 text-gold-gradient">ZERO TRUST</span>
-        </h1>
-        <p class="text-slate-400 max-w-2xl mx-auto text-sm md:text-base font-light">
-            Ứng dụng toán học mật mã để xác thực dữ liệu "Sống, Sạch" mà không cần tiếp cận hoặc lưu trữ dữ liệu gốc của công dân.
-        </p>
-    </header>
-
-    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        
-        <div class="relative p-10 zkp-box rounded-[3rem] h-[500px] flex flex-col items-center justify-center overflow-hidden" data-aos="zoom-in">
-            <div class="scanner-line"></div>
+    <div id="lock-screen">
+        <div class="glass-login p-10 md:p-16 rounded-[2.5rem] w-full max-w-md mx-4 text-center">
+            <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-500/20">
+                <i data-lucide="lock" class="text-white w-10 h-10"></i>
+            </div>
+            <h2 class="font-['Montserrat'] text-2xl font-bold text-white mb-2 uppercase">Truy cập giới hạn</h2>
+            <p class="text-slate-500 text-xs mb-8 tracking-widest uppercase">Vui lòng nhập Passcode để tiếp tục</p>
             
-            <div class="absolute top-10 flex gap-4 opacity-40">
-                <div class="bg-slate-800 p-3 rounded-lg border border-red-500/50 text-[10px] text-red-400 font-mono">CCCD: 03719xxxx</div>
-                <div class="bg-slate-800 p-3 rounded-lg border border-red-500/50 text-[10px] text-red-400 font-mono">DOB: 12/05/19xx</div>
-            </div>
-
-            <div class="relative z-20 text-center">
-                <div class="w-32 h-32 bg-blue-600/20 rounded-full flex items-center justify-center border-2 border-blue-500 animate-pulse mb-4">
-                    <i data-lucide="shield-check" class="w-16 h-16 text-blue-400"></i>
-                </div>
-                <div class="font-heading font-black text-2xl tracking-widest text-white">ZKP ENGINE</div>
-                <div class="text-[9px] text-blue-400 font-bold uppercase mt-2">Xác thực ẩn danh</div>
-            </div>
-
-            <div class="absolute bottom-10 flex gap-4">
-                <div class="proof-token bg-green-500/20 p-3 rounded-full border border-green-500 text-[10px] text-green-400 font-bold">VERIFIED: TRUE</div>
-                <div class="proof-token bg-green-500/20 p-3 rounded-full border border-green-500 text-[10px] text-green-400 font-bold" style="animation-delay: 0.5s">ELIGIBLE: YES</div>
-            </div>
-        </div>
-
-        <div class="space-y-10" data-aos="fade-left">
             <div class="space-y-4">
-                <h3 class="text-2xl font-bold text-blue-400 italic">"Biết mà không cần Thấy"</h3>
-                <p class="text-slate-300 text-sm leading-relaxed">
-                    Khác với mô hình của GTEL (phải đẩy dữ liệu thô qua các Gateway), HTC sử dụng thuật toán <strong class="text-white">Zero-Knowledge Proof</strong>. Hệ thống chỉ gửi đi các bằng chứng toán học rằng dữ liệu là chính xác.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 hover:border-blue-500/50 transition-all">
-                    <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="database-zap" class="text-blue-400 w-5 h-5"></i>
-                    </div>
-                    <h4 class="font-bold text-white mb-2">Đối soát "Sống"</h4>
-                    <p class="text-[11px] text-slate-500">Kết nối trực tiếp CSDL Dân cư theo thời gian thực để xác minh trạng thái công dân.</p>
-                </div>
-                <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 hover:border-blue-500/50 transition-all">
-                    <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="user-check" class="text-green-400 w-5 h-5"></i>
-                    </div>
-                    <h4 class="font-bold text-white mb-2">Dữ liệu "Sạch"</h4>
-                    <p class="text-[11px] text-slate-500">Loại bỏ hoàn toàn dữ liệu rác, dữ liệu ảo khỏi hệ thống bảo hiểm quốc gia.</p>
-                </div>
-            </div>
-
-            <div class="p-6 bg-blue-900/10 border-l-4 border-l-blue-500 rounded-r-2xl">
-                <div class="flex items-start gap-4">
-                    <i data-lucide="info" class="text-blue-400 w-6 h-6 shrink-0"></i>
-                    <p class="text-xs text-slate-400 italic">
-                        "Mọi hành vi truy cập dữ liệu đều được định danh qua mTLS và ghi nhật ký Blockchain, đảm bảo không ai - kể cả quản trị viên hệ thống - có thể xem trộm thông tin cá nhân của người dân."
-                    </p>
-                </div>
+                <input type="password" id="passcode" class="pass-input w-full py-4 rounded-xl text-lg" placeholder="••••••">
+                <p id="error-msg" class="text-red-500 text-[10px] font-bold uppercase hidden">Mật mã không chính xác</p>
+                <button onclick="checkPass()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-900/40 uppercase text-xs tracking-[0.2em]">
+                    Xác thực truy cập
+                </button>
             </div>
         </div>
-    </main>
+    </div>
 
-    <footer class="mt-20 text-center">
-        <button class="px-10 py-4 border border-blue-500/30 rounded-xl text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-white hover:bg-blue-600/20 transition-all">
-            Xem quy trình vận hành chi tiết
-        </button>
-    </footer>
+    <div id="main-content" class="hidden">
+        <nav class="h-[70px] border-b border-white/10 px-6 md:px-12 flex items-center justify-between bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-white">H</div>
+                <span class="font-['Montserrat'] font-extrabold text-xl tracking-tighter text-white hidden sm:block">HTC <span class="text-blue-500">GROUP</span></span>
+            </div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        lucide.createIcons();
-        AOS.init({ duration: 1000 });
-    </script>
+            <ul class="hidden lg:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest">
+                <li><a onclick="loadPage('hero.html', this)" class="nav-item active">01. Tầm nhìn</a></li>
+                <li><a onclick="loadPage('gap.html', this)" class="nav-item">02. Đối soát</a></li>
+                <li><a onclick="loadPage('technical.html', this)" class="nav-item">03. Công nghệ</a></li>
+                <li><a onclick="loadPage('security.html', this)" class="nav-item">04. Bảo mật</a></li>
+                <li><a onclick="loadPage('experience.html', this)" class="nav-item">05. Trải nghiệm</a></li>
+                <li><a onclick="loadPage('simulation.html', this)" class="nav-item">06. Mô phỏng</a></li>
+            </ul>
+
+            <button class="lg:hidden p-2" onclick="toggleMenu()"><i data-lucide="menu"></i></button>
+        </nav>
+
+        <div id="mobile-menu" class="fixed inset-0 bg-slate-950 z-[60] flex flex-col p-10 gap-8 lg:hidden">
+            <button class="self-end" onclick="toggleMenu()"><i data-lucide="x"></i></button>
+            <div class="flex flex-col gap-6 mt-10">
+                <a onclick="loadPage('hero.html', null); toggleMenu()" class="text-2xl font-bold uppercase">01. Tầm nhìn</a>
+                <a onclick="loadPage('gap.html', null); toggleMenu()" class="text-2xl font-bold uppercase">02. Đối soát</a>
+                <a onclick="loadPage('technical.html', null); toggleMenu()" class="text-2xl font-bold uppercase">03. Công nghệ</a>
+                <a onclick="loadPage('security.html', null); toggleMenu()" class="text-2xl font-bold uppercase">04. Bảo mật</a>
+                <a onclick="loadPage('experience.html', null); toggleMenu()" class="text-2xl font-bold uppercase">05. Trải nghiệm</a>
+                <a onclick="loadPage('simulation.html', null); toggleMenu()" class="text-2xl font-bold uppercase">06. Mô phỏng</a>
+            </div>
+        </div>
+
+        <iframe src="hero.html" id="content-frame" class="page-container"></iframe>
+    </div>
+
+<script>
+    lucide.createIcons();
+
+    const pages = ['hero.html', 'gap.html', 'technical.html', 'security.html', 'experience.html', 'simulation.html'];
+    let currentPageIndex = 0;
+
+    function checkPass() {
+        const pass = document.getElementById('passcode').value;
+        if (pass === 'htc@06') {
+            document.getElementById('lock-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden');
+            }, 500);
+        } else {
+            const error = document.getElementById('error-msg');
+            error.classList.remove('hidden');
+            setTimeout(() => error.classList.add('hidden'), 2000);
+        }
+    }
+
+    // Lắng nghe phím Enter cho passcode
+    document.getElementById('passcode').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkPass();
+    });
+
+    function loadPage(pageName, element) {
+        const frame = document.getElementById('content-frame');
+        frame.style.opacity = '0'; // Mờ dần trang cũ
+        
+        setTimeout(() => {
+            frame.src = pageName;
+            currentPageIndex = pages.indexOf(pageName);
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            // Tìm item trong menu desktop để active
+            const navItems = document.querySelectorAll('.lg\\:flex .nav-item');
+            if (navItems[currentPageIndex]) navItems[currentPageIndex].classList.add('active');
+            
+            frame.onload = () => { frame.style.opacity = '1'; }; // Hiện dần trang mới
+        }, 400);
+    }
+
+    function toggleMenu() {
+        document.getElementById('mobile-menu').classList.toggle('open');
+    }
+
+    // Điều hướng từ tin nhắn trang con
+    window.addEventListener('message', function(e) {
+        if (e.data === 'nextPage') navigate('next');
+        if (e.data === 'prevPage') navigate('prev');
+    });
+
+    function navigate(direction) {
+        if (direction === 'next' && currentPageIndex < pages.length - 1) {
+            loadPage(pages[currentPageIndex + 1]);
+        } else if (direction === 'prev' && currentPageIndex > 0) {
+            loadPage(pages[currentPageIndex - 1]);
+        }
+    }
+</script>
 </body>
 </html>
