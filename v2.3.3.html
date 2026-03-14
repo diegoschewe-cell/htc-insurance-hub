@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNeIN Master Prototype v2.3.3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        :root { --primary: #1e3a8a; --success: #10b981; --dark: #020617; --danger: #e11d48; --ai-logic: #4338ca; }
+        body { font-family: 'Inter', sans-serif; background: black; color: white; overflow: hidden; }
+        .app-shell { max-width: 430px; height: 932px; margin: auto; position: relative; background: var(--dark); overflow: hidden; border: 8px solid #1e293b; border-radius: 50px; }
+        .screen { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.4s ease; }
+        .screen.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        .glass { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
+        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(22px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .map-dot { width: 4px; height: 4px; background: #10b981; border-radius: 50%; position: absolute; box-shadow: 0 0 10px #10b981; }
+    </style>
+</head>
+<body>
+
+<div class="app-shell shadow-[0_0_100px_rgba(30,58,138,0.4)]">
+    
+    <div class="absolute bottom-24 right-4 z-50 flex flex-col gap-2">
+        <button onclick="switchInterface('citizen')" class="p-3 bg-white/10 glass rounded-full hover:bg-white/20"><i data-lucide="user" class="text-white w-5 h-5"></i></button>
+        <button onclick="switchInterface('c06')" class="p-3 bg-white/10 glass rounded-full hover:bg-white/20"><i data-lucide="shield" class="text-white w-5 h-5"></i></button>
+        <button onclick="switchInterface('business')" class="p-3 bg-white/10 glass rounded-full hover:bg-white/20"><i data-lucide="briefcase" class="text-white w-5 h-5"></i></button>
+    </div>
+
+    <section id="screen-splash" class="screen active items-center justify-center">
+        <div class="w-20 h-20 bg-blue-900 rounded-3xl flex items-center justify-center border-2 border-emerald-500 animate-pulse">
+            <i data-lucide="shield-check" class="text-white w-12 h-12"></i>
+        </div>
+        <h1 class="text-2xl font-bold tracking-[0.3em] mt-4">VNeIN</h1>
+        <p class="text-emerald-500 text-[9px] uppercase tracking-widest italic">v2.3.3 | Enterprise & National Admin</p>
+    </section>
+
+    <section id="screen-faceid" class="screen items-center justify-center p-10">
+        <div class="w-48 h-48 border-2 border-white/10 rounded-full flex items-center justify-center"><i data-lucide="user" id="face-icon" class="w-20 h-20 text-slate-800"></i><div id="auth-success" class="hidden text-emerald-500 animate-bounce"><i data-lucide="check-circle-2" class="w-20 h-20"></i></div></div>
+        <button onclick="runAuth()" class="mt-20 w-full py-4 bg-blue-700 rounded-2xl font-bold uppercase tracking-widest">Xác thực VNeID</button>
+    </section>
+
+    <section id="interface-citizen" class="screen">
+        <header class="p-6 pt-12 glass flex justify-between items-center shrink-0">
+            <div><p class="text-[10px] text-slate-400 uppercase font-semibold">Công dân v2.3.3</p><p class="font-bold text-white text-lg">NGUYỄN VĂN HIẾU</p></div>
+            <i data-lucide="brain-circuit" class="text-indigo-400 w-6 h-6"></i>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-5 space-y-6 pb-32 no-scrollbar">
+            <div class="p-4 glass rounded-3xl flex justify-between items-center border border-white/5">
+                <div class="flex items-center gap-3"><i data-lucide="fingerprint" class="text-emerald-500 w-5 h-5"></i><div><p class="text-xs font-bold">Quyền Consent Dữ Liệu</p><p class="text-[9px] text-slate-500">Bệnh viện & Hãng BH liên thông</p></div></div>
+                <label class="switch"><input type="checkbox" id="consent-toggle" onchange="toggleConsent()"><span class="slider"></span></label>
+            </div>
+
+            <div id="citizen-content" class="hidden space-y-6">
+                <div class="space-y-3">
+                    <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2"><i data-lucide="wallet" class="w-3 h-3"></i> Unified Wallet</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div onclick="alert('Hồ sơ BHYT: Mức hưởng 80% - Mã số: GD479...')" class="p-4 glass rounded-2xl border-l-4 border-blue-500 cursor-pointer">
+                            <p class="text-[11px] font-bold">BHYT & BHXH</p>
+                            <p class="text-[9px] text-emerald-500 mt-1 uppercase">Click xem hồ sơ</p>
+                        </div>
+                        <div onclick="alert('Hồ sơ PVI: Xe KIA Seltos - BS: 30K-123.XX')" class="p-4 glass rounded-2xl border-l-4 border-emerald-500 cursor-pointer">
+                            <p class="text-[11px] font-bold">PVI TNDS Ô tô</p>
+                            <p class="text-[9px] text-slate-400 mt-1 uppercase">KIA Seltos 2023</p>
+                        </div>
+                        <div onclick="alert('VBI Care: Hạn mức nội trú 150tr/năm')" class="p-4 glass rounded-2xl border-l-4 border-amber-500 cursor-pointer">
+                            <p class="text-[11px] font-bold">VBI Health Care</p>
+                            <p class="text-[9px] text-amber-500 mt-1 uppercase">Mức: Vàng</p>
+                        </div>
+                        <div onclick="alert('Manulife: Quyền lợi tử kỳ + Bệnh hiểm nghèo 2 tỷ')" class="p-4 glass rounded-2xl border-l-4 border-rose-500 cursor-pointer">
+                            <p class="text-[11px] font-bold">Manulife Digital</p>
+                            <p class="text-[9px] text-rose-500 mt-1 uppercase">Tâm An 360</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-5 bg-gradient-to-br from-indigo-900/40 to-blue-900/20 border border-indigo-500/30 rounded-[2rem]">
+                    <div class="flex items-center gap-2 mb-3"><i data-lucide="sparkles" class="text-indigo-400 w-5 h-5"></i><h3 class="text-xs font-bold text-white">VNeIN AI Advisor</h3></div>
+                    <button onclick="showAIDetail()" class="w-full py-2 bg-indigo-600 rounded-lg text-[9px] font-bold uppercase">Xem phân tích chi tiết</button>
+                    <div id="ai-detail" class="hidden mt-4 text-[10px] space-y-2 border-t border-white/10 pt-4">
+                        <p class="text-slate-300">• Chỉ số sức khỏe sạch 9.5/10 (Dựa trên HIS 5 năm).</p>
+                        <p class="text-slate-300">• Dự báo: Phù hợp gói ưu đãi phí 15% của Sunlife.</p>
+                        <p class="text-slate-300">• Cảnh báo: BH xe máy sắp hết hạn sau 12 ngày.</p>
+                    </div>
+                </div>
+
+                <div class="p-5 glass rounded-[2rem] border border-white/10">
+                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-3 text-center tracking-widest">Trung tâm bồi thường</p>
+                    <button id="btn-autoclaim" onclick="calculateAutoClaim()" class="w-full py-3 bg-emerald-600 rounded-xl text-[10px] font-bold uppercase transition-all">Gửi yêu cầu Auto-Claim</button>
+                    <div id="calculation-result" class="hidden mt-4 p-4 bg-black/40 rounded-2xl border border-white/5 space-y-2">
+                        <p class="text-[10px] font-bold text-center text-emerald-400">ĐÃ GỬI LÊN TRỤC VNeIN</p>
+                        <p class="text-[9px] text-slate-400 text-center">BHYT trả 8tr | DNBH trả 2tr. Phê duyệt 100%.</p>
+                    </div>
+                </div>
+            </div>
+            <div id="consent-off-state" class="py-20 text-center"><i data-lucide="shield-off" class="w-12 h-12 text-slate-700 mx-auto"></i><p class="text-xs text-slate-500 mt-4">Vui lòng bật Consent để truy cập dữ liệu.</p></div>
+        </div>
+    </section>
+
+    <section id="interface-c06" class="screen bg-slate-950">
+        <header class="p-6 pt-12 border-b border-white/10 flex justify-between items-end">
+            <div><p class="text-rose-500 text-[10px] font-bold uppercase">Quantum-Safe Active</p><h2 class="text-lg font-bold">C06 Command Center</h2></div>
+            <div class="text-right"><p class="text-slate-500 text-[8px] uppercase">API REVENUE (BOO)</p><p id="revenue-txt" class="text-emerald-500 font-bold font-mono">1.242.000 VNĐ</p></div>
+        </header>
+        <div class="p-5 flex-1 overflow-y-auto space-y-6 no-scrollbar">
+            <div class="h-40 glass rounded-2xl relative overflow-hidden bg-slate-900 border border-white/5">
+                <p class="absolute top-2 left-2 text-[8px] text-slate-500">National Interop Map (Live)</p>
+                <div class="map-dot" style="top:20%; left:30%"></div><div class="map-dot" style="top:50%; left:45%"></div><div class="map-dot" style="top:80%; left:40%"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            </div>
+            <div class="p-4 glass rounded-2xl">
+                <div class="flex justify-between items-center mb-4"><p class="text-xs font-bold">API Sprawl & Traffic</p><span class="text-[9px] bg-emerald-500/20 text-emerald-500 px-2 py-1 rounded">Normal</span></div>
+                <canvas id="c06Chart" height="120"></canvas>
+            </div>
+            <div class="space-y-2">
+                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Security Audit Trail (Immutable)</p>
+                <div id="audit-logs" class="text-[8px] font-mono text-slate-400 space-y-1 bg-black/30 p-3 rounded-xl border border-white/5 h-24 overflow-hidden"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="interface-business" class="screen bg-dark">
+        <header class="p-6 pt-12 border-b border-white/10"><h2 class="text-lg font-bold">Business & Insight</h2></header>
+        <div class="p-5 flex-1 overflow-y-auto space-y-6 no-scrollbar">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="p-4 glass rounded-2xl border border-rose-500/30">
+                    <p class="text-[9px] text-rose-500 font-bold uppercase mb-1">Cảnh báo gian lận</p>
+                    <p class="text-xl font-bold">02 <span class="text-[10px] font-normal">Ca nghi ngờ</span></p>
+                </div>
+                <div class="p-4 glass rounded-2xl border border-indigo-500/30">
+                    <p class="text-[9px] text-indigo-400 font-bold uppercase mb-1">Smart Contract</p>
+                    <p class="text-xl font-bold">89% <span class="text-[10px] font-normal">Auto-pay</span></p>
+                </div>
+            </div>
+            <div class="p-4 glass rounded-2xl">
+                <p class="text-xs font-bold mb-3 flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4"></i> Market Insight (De-identified)</p>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-[10px]"><span class="text-slate-400">PVI Market Share:</span><span class="text-emerald-500">22%</span></div>
+                    <div class="w-full bg-slate-800 h-1 rounded-full"><div class="bg-emerald-500 h-full w-[22%]"></div></div>
+                </div>
+            </div>
+            <div class="p-4 bg-indigo-900/10 border border-indigo-500/20 rounded-2xl">
+                <p class="text-[10px] text-indigo-300 font-bold mb-2 uppercase">Đối soát API & Tài chính (EOD)</p>
+                <div id="claim-list" class="space-y-2 text-[10px]"></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    let VNeIN_Universe = {
+        user: { name: "NGUYỄN VĂN HIẾU", consent: false, isClaimed: false },
+        claims: [], traffic: [80, 70, 85, 90, 110, 140], 
+        apiRevenue: 1242000,
+        logs: ["[18:00] Quantum Key Rotation Success", "[18:00] API Rate Limit Set: 10k/min"]
+    };
+
+    lucide.createIcons();
+    setTimeout(() => { switchInterface('faceid'); }, 2000);
+
+    function switchInterface(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const map = { faceid:'screen-faceid', citizen:'interface-citizen', c06:'interface-c06', business:'interface-business' };
+        document.getElementById(map[id]).classList.add('active');
+        if(id==='c06') { initChart(); updateRevenue(); }
+        if(id==='business') renderBusinessPortal();
+        lucide.createIcons();
+    }
+
+    function runAuth() {
+        document.getElementById('face-icon').classList.add('hidden');
+        document.getElementById('auth-success').classList.remove('hidden');
+        VNeIN_Universe.logs.push("[18:05] Auth: HIẾU - Identity Level 2 Verified");
+        setTimeout(() => { switchInterface('citizen'); }, 1000);
+    }
+
+    function toggleConsent() {
+        const isChecked = document.getElementById('consent-toggle').checked;
+        VNeIN_Universe.user.consent = isChecked;
+        document.getElementById('citizen-content').style.display = isChecked ? 'block' : 'none';
+        document.getElementById('consent-off-state').style.display = isChecked ? 'none' : 'block';
+    }
+
+    function showAIDetail() { document.getElementById('ai-detail').classList.toggle('hidden'); }
+
+    function calculateAutoClaim() {
+        if(VNeIN_Universe.user.isClaimed) return;
+        VNeIN_Universe.user.isClaimed = true;
+        const btn = document.getElementById('btn-autoclaim');
+        btn.classList.replace('bg-emerald-600', 'bg-slate-700');
+        btn.innerText = "YÊU CẦU ĐÃ ĐƯỢC XỬ LÝ";
+        btn.disabled = true;
+        document.getElementById('calculation-result').classList.remove('hidden');
+        
+        const newClaim = { id: "CL-HIEU-303", hospital: "Chợ Rẫy", amount: "10.000.000đ", mode: "Smart Contract < 5M: NO (10M)" };
+        VNeIN_Universe.claims.unshift(newClaim);
+        VNeIN_Universe.apiRevenue += 5000; // Cộng phí API
+        VNeIN_Universe.logs.push(`[18:07] Interop API: HIẾU - Call from Hospital Node`);
+    }
+
+    function updateRevenue() {
+        setInterval(() => {
+            VNeIN_Universe.apiRevenue += Math.floor(Math.random() * 50);
+            document.getElementById('revenue-txt').innerText = VNeIN_Universe.apiRevenue.toLocaleString() + " VNĐ";
+        }, 3000);
+    }
+
+    function renderBusinessPortal() {
+        const list = document.getElementById('claim-list');
+        if(VNeIN_Universe.claims.length === 0) { list.innerHTML = "Chưa có đối soát mới"; return; }
+        list.innerHTML = VNeIN_Universe.claims.map(c => `
+            <div class="p-3 glass rounded-xl flex justify-between">
+                <span>${c.id} | ${c.hospital}</span><span class="text-indigo-400">${c.amount}</span>
+            </div>
+        `).join('');
+    }
+
+    function initChart() {
+        const ctx = document.getElementById('c06Chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: { labels: ['1h','2h','3h','4h','5h','6h'], datasets: [{ data: VNeIN_Universe.traffic, borderColor: '#10b981', tension: 0.4, fill: true, backgroundColor: 'rgba(16,185,129,0.05)' }] },
+            options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+        });
+        document.getElementById('audit-logs').innerHTML = VNeIN_Universe.logs.map(l => `<div>${l}</div>`).reverse().join('');
+    }
+</script>
+</body>
+</html>
